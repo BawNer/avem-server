@@ -1,0 +1,1 @@
+export const JWT_SECRET = 'avem_system_secret'
