@@ -5,9 +5,10 @@ import { AppService } from './app.service';
 import { GroupsModule } from './groups/groups.module';
 import ormconfig from './ormconfig'
 import { RoleModule } from './roles/role.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormconfig), RoleModule, GroupsModule],
+  imports: [TypeOrmModule.forRoot(ormconfig), RoleModule, GroupsModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
