@@ -23,7 +23,7 @@ export class GroupsService {
     const group = await this.groupsRepository.findOne({name: createGroupDto.name})
 
     if (group) {
-      throw new HttpException(`Group with name ${name} are exist`, HttpStatus.CONFLICT)
+      throw new HttpException(`Group with name ${createGroupDto.name} are exist`, HttpStatus.CONFLICT)
     }
 
     const newGroup = new GroupsEntity()
