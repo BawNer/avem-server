@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { UsersEntity } from "@app/users/users.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'groups' })
 export class GroupsEntity {
@@ -7,4 +8,7 @@ export class GroupsEntity {
 
   @Column()
   name: string
+
+  @OneToOne(() => UsersEntity, user => user.groupId)
+  user: UsersEntity
 }

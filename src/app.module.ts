@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GroupsModule } from './groups/groups.module';
 import ormconfig from './ormconfig'
-import { RoleModule } from './roles/role.module';
+import { RoleModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
