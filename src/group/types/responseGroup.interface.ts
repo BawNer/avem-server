@@ -1,4 +1,4 @@
-import { GroupsEntity } from "../groups.entity";
+import { GroupsEntity } from "../group.entity";
 
 export interface GroupResponseInterface {
   group: GroupsEntity

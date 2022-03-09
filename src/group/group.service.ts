@@ -2,39 +2,39 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateGroupDto } from "./dto/createGroup.dto";
-import { GroupsEntity } from "./groups.entity";
+import { GroupEntity } from "./group.entity";
 import { GroupResponseInterface } from "./types/responseGroup.interface";
 import { GroupsResponseInterface } from "./types/responseGroups.interface";
 
 @Injectable()
-export class GroupsService {
+export class GroupService {
 
   constructor(
-    @InjectRepository(GroupsEntity)
-    private readonly groupsRepository: Repository<GroupsEntity>
+    @InjectRepository(GroupEntity)
+    private readonly groupRepository: Repository<GroupEntity>
   ) {}
 
   async findAll(): Promise<GroupsResponseInterface> {
-    const groups = await this.groupsRepository.find()
+    const groups = await this.groupRepository.find()
     return await this.buildResponseInteface(groups)
   }
 
-  async createGroup(createGroupDto: CreateGroupDto): Promise<GroupsEntity> {
-    const group = await this.groupsRepository.findOne({name: createGroupDto.name})
+  async createGroup(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
+    const group = await this.groupRepository.findOne({name: createGroupDto.name})
 
     if (group) {
       throw new HttpException(`Group with name ${createGroupDto.name} are exist`, HttpStatus.CONFLICT)
     }
 
-    const newGroup = new GroupsEntity()
+    const newGroup = new GroupEntity()
 
     Object.assign(newGroup, createGroupDto)
 
-    return await this.groupsRepository.save(newGroup)
+    return await this.groupRepository.save(newGroup)
   }
 
-  async updateGroup(id: number, createGroupDto: CreateGroupDto): Promise<GroupsEntity> {
-    const group = await this.groupsRepository.findOne(id)
+  async updateGroup(id: number, createGroupDto: CreateGroupDto): Promise<GroupEntity> {
+    const group = await this.groupRepository.findOne(id)
 
     if (!group) {
       throw new HttpException(`Group with id ${id} not found`, HttpStatus.NOT_FOUND)
@@ -42,20 +42,20 @@ export class GroupsService {
 
     Object.assign(group, createGroupDto)
 
-    return await this.groupsRepository.save(group)
+    return await this.groupRepository.save(group)
   }
 
   async deleteGroup(id: number) {
-    const group = await this.groupsRepository.findOne(id)
+    const group = await this.groupRepository.findOne(id)
 
     if (!group) {
       throw new HttpException(`Group with id ${id} not found`, HttpStatus.NOT_FOUND)
     }
 
-    return await this.groupsRepository.delete(id)
+    return await this.groupRepository.delete(id)
   }
 
-  async buildResponseInteface(groups: GroupsEntity[]): Promise<GroupsResponseInterface> {
+  async buildResponseInteface(groups: GroupEntity[]): Promise<GroupsResponseInterface> {
     return { groups }
   }
 

@@ -1,10 +1,10 @@
 import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash } from 'bcrypt'
-import { GroupsEntity } from "@app/groups/groups.entity";
-import { RolesEntity } from "@app/roles/roles.entity";
+import { GroupEntity } from "@app/group/group.entity";
+import { RoleEntity } from "@app/role/role.entity";
 
 @Entity({ name: 'users' })
-export class UsersEntity {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -44,7 +44,7 @@ export class UsersEntity {
   refreshToken: string
 
   @Column({ type: "timestamp", default: () => 'CURRENT_TIMESTAMP' })
-  lastsignIn: string
+  lastSignIn: string
 
   @Column({default: false})
   isEmailActive: boolean
@@ -52,9 +52,9 @@ export class UsersEntity {
   @Column({default: false})
   isPhoneActive: boolean
 
-  @OneToOne(() => GroupsEntity, group => group.id)
-  group: GroupsEntity
+  @OneToOne(() => GroupEntity, group => group.id)
+  group: GroupEntity
 
-  @OneToMany(() => RolesEntity, role => role.id)
-  roles: RolesEntity[]
+  @OneToMany(() => RoleEntity, role => role.id)
+  roles: RoleEntity[]
 }

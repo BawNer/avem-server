@@ -1,8 +1,8 @@
-import { UsersEntity } from "@app/users/users.entity";
+import { UserEntity } from "@app/user/user.entity";
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 
 @Entity({name: 'roles'})
-export class RolesEntity{
+export class RoleEntity{
   @PrimaryGeneratedColumn()
   id: number
 
@@ -12,6 +12,6 @@ export class RolesEntity{
   @Column()
   access: string
 
-  @OneToMany(() => UsersEntity, user => user.roleId)
-  user: UsersEntity
+  @OneToMany(() => UserEntity, user => user.roleId)
+  user: UserEntity
 }
