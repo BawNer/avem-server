@@ -18,19 +18,21 @@ export class RoleController {
   }
 
   @Post('role')
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   async createRole(@Body('role') createRoleDto: CreateRoleDto): Promise<RolesResponseInterface> {
     const role = await this.roleServivce.createRole(createRoleDto)
     return { roles: role }
   }
 
   @Put('role/:id')
+  @UseGuards(AuthGuard)
   async updateRole(@Param('id') roleId: number, @Body('role') createRoleDto: CreateRoleDto): Promise<RolesResponseInterface> {
     const role = await this.roleServivce.updateRole(roleId, createRoleDto)
     return { roles: role }
   }
 
   @Delete('role/:id')
+  @UseGuards(AuthGuard)
   async deleteRole(@Param('id') roleId: number): Promise<DeleteResult> {
     return await this.roleServivce.deleteRole(roleId)
   }
