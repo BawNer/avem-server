@@ -1,5 +1,5 @@
 import { UserEntity } from "@app/user/user.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -9,6 +9,6 @@ export class GroupEntity {
   @Column()
   name: string
 
-  @OneToOne(() => UserEntity, user => user.groupId)
+  @OneToMany(() => UserEntity, user => user.groupId)
   user: UserEntity
 }

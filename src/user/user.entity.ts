@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash } from 'bcrypt'
 import { GroupEntity } from "@app/group/group.entity";
 import { RoleEntity } from "@app/role/role.entity";
@@ -52,9 +52,9 @@ export class UserEntity {
   @Column({default: false})
   isPhoneActive: boolean
 
-  @OneToOne(() => GroupEntity, group => group.id)
+  @ManyToOne(() => GroupEntity, group => group.id, {eager: true})
   group: GroupEntity
 
-  @OneToMany(() => RoleEntity, role => role.id)
-  roles: RoleEntity[]
+  @ManyToOne(() => RoleEntity, role => role.id, {eager: true})
+  role: RoleEntity
 }

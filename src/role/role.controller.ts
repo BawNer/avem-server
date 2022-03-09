@@ -18,7 +18,7 @@ export class RoleController {
   }
 
   @Post('role')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async createRole(@Body('role') createRoleDto: CreateRoleDto): Promise<RolesResponseInterface> {
     const role = await this.roleServivce.createRole(createRoleDto)
     return { roles: role }

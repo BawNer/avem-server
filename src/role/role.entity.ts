@@ -1,5 +1,5 @@
 import { UserEntity } from "@app/user/user.entity";
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, OneToOne } from "typeorm";
 
 @Entity({name: 'roles'})
 export class RoleEntity{
@@ -9,7 +9,7 @@ export class RoleEntity{
   @Column()
   name: string
 
-  @Column()
+  @Column('simple-array')
   access: string
 
   @OneToMany(() => UserEntity, user => user.roleId)

@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { FindRelationsNotFoundError, Repository } from "typeorm";
 import { UserResponseInterface } from "./types/userResponse.interface";
 import { UserEntity } from "./user.entity";
 import { sign } from 'jsonwebtoken'
 import { compare } from 'bcrypt'
 import { JWT_SECRET } from "@app/config";
 import { CreateUserDto } from "./dto/createUsers.dto";
+import { LoginUserDto } from "./dto/loginUser.dto";
 
 @Injectable()
 export class UserService {
@@ -14,10 +15,6 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>
   ) {}
-
-  async findAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find()
-  }
 
   async findById(id: number): Promise<UserEntity> {
     const user = await this.userRepository.findOne(id)
@@ -42,12 +39,28 @@ export class UserService {
     return await this.userRepository.save(newUser)
   }
 
+  async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({login: loginUserDto.login}, { 
+      select: ['id', 'username', 'bio', 'photo', 'phone', 'email', 'login', 'password', 'refreshToken', 'isEmailActive', 'isPhoneActive']
+    })
+
+    if (!user) { throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY) }
+
+    const isPasswordCorrect = await compare(loginUserDto.password, user.password)
+
+    if (!isPasswordCorrect) { throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY) }
+
+    delete user.password
+
+    return user
+  }
+
   generateJwt(user: UserEntity): string {
     return sign({
       id: user.id,
       login: user.login,
       username: user.username,
-      role: user?.roles,
+      role: user?.role,
       lastSignIn: user.lastSignIn
     }, JWT_SECRET)
   }
