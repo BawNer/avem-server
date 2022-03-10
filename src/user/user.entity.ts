@@ -2,6 +2,7 @@ import { BeforeInsert, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColu
 import { hash } from 'bcrypt'
 import { GroupEntity } from "@app/group/group.entity";
 import { RoleEntity } from "@app/role/role.entity";
+import { TokenEntity } from "@app/token/token.entity";
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -57,4 +58,7 @@ export class UserEntity {
 
   @ManyToOne(() => RoleEntity, role => role.id, {eager: true})
   role: RoleEntity
+
+  @OneToOne(() => TokenEntity, token => token.userId, {eager: true})
+  token: TokenEntity
 }
