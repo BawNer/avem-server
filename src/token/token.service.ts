@@ -3,14 +3,16 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { TokenEntity } from "./token.entity";
-import { sign } from "jsonwebtoken"
+import { sign, verify } from "jsonwebtoken"
 import { JWT_SECRET } from "@app/config";
+import { UserService } from "@app/user/user.service";
 
 @Injectable()
 export class TokenService {
   constructor (
     @InjectRepository(TokenEntity)
-    private readonly tokenRepository: Repository<TokenEntity>
+    private readonly tokenRepository: Repository<TokenEntity>,
+    private readonly userService: UserService
   ) {}
 
   async findToken(userId: number): Promise<TokenEntity> {
@@ -38,5 +40,35 @@ export class TokenService {
     Object.assign(newToken, {userId: user.id, token})
 
     return await this.tokenRepository.save(newToken)
+  }
+
+  async verifyToken(userToken: string): Promise<TokenEntity> {
+    const token = await this.tokenRepository.findOne({token: userToken})
+
+    if (!token) { throw new HttpException('Token not found', HttpStatus.CONFLICT) }
+
+    const tokenCreatedAt = new Date(token.createdAt).getTime()
+    const currentTime = new Date().getTime()
+
+    if ( ((currentTime - tokenCreatedAt) / (1000 * 60)) < 15 ) {
+      return token
+    } else {
+      throw new HttpException('Token are not valid', HttpStatus.BAD_REQUEST)
+    }
+
+  }
+
+  async updateToken(userToken: string, userRefreshToken: string): Promise<TokenEntity> {
+    const token = await this.tokenRepository.findOne({token: userToken})
+
+    if (!token) { throw new HttpException('Token not found', HttpStatus.CONFLICT) }
+
+    const decodeUserToken = verify(token, JWT_SECRET)
+
+    const user = await this.userService.findById(decodeUserToken.id)
+
+    if (userRefreshToken !== user.refreshToken) { throw new HttpException('Refresh token not valid', HttpStatus.CONFLICT) }
+
+    return await this.createToken(user)
   }
 }

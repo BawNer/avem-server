@@ -22,4 +22,10 @@ export class TokenController {
     const token = await this.tokenService.createToken(user)
     return { token }
   }
+
+  @Post('verify')
+  async verifyToken(@Body('token') userToken: string): Promise<TokenResponseInterface> {
+    const token = await this.tokenService.verifyToken(userToken)
+    return { token }
+  }
 }
