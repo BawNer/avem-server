@@ -6,6 +6,7 @@ import { TokenEntity } from "./token.entity";
 import { sign, verify } from "jsonwebtoken"
 import { JWT_SECRET } from "@app/config";
 import { UserService } from "@app/user/user.service";
+import { UpdateTokenDto } from "./dto/updateToken.dto";
 
 @Injectable()
 export class TokenService {
@@ -58,8 +59,8 @@ export class TokenService {
 
   }
 
-  async updateToken(userToken: string, userRefreshToken: string): Promise<TokenEntity> {
-    const token = await this.tokenRepository.findOne({token: userToken})
+  async updateToken(updateTokenDto: UpdateTokenDto): Promise<TokenEntity> {
+    const token = await this.tokenRepository.findOne({token: updateTokenDto.userToken})
 
     if (!token) { throw new HttpException('Token not found', HttpStatus.CONFLICT) }
 
@@ -67,8 +68,20 @@ export class TokenService {
 
     const user = await this.userService.findById(decodeUserToken.id)
 
-    if (userRefreshToken !== user.refreshToken) { throw new HttpException('Refresh token not valid', HttpStatus.CONFLICT) }
+    if (updateTokenDto.userRefreshUserToken !== user.refreshToken) { 
+      throw new HttpException('Refresh token not valid', HttpStatus.CONFLICT)
+    }
 
-    return await this.createToken(user)
+    const newToken = sign({
+      uid: user.id,
+      login: user.login,
+      username: user.username,
+      role: user?.role,
+      lastSignIn: user.lastSignIn
+    }, JWT_SECRET)
+
+    Object.assign(token, newToken)
+
+    return await this.tokenRepository.save(token)
   }
 }

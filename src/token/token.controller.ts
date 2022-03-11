@@ -1,6 +1,7 @@
 import { AuthGuard } from "@app/user/guards/auth.guard";
 import { UserEntity } from "@app/user/user.entity";
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { UpdateTokenDto } from "./dto/updateToken.dto";
 import { TokenService } from "./token.service";
 import { TokenResponseInterface } from "./types/tokenResponse.interface";
 
@@ -24,8 +25,16 @@ export class TokenController {
   }
 
   @Post('verify')
+  @UseGuards(AuthGuard)
   async verifyToken(@Body('token') userToken: string): Promise<TokenResponseInterface> {
     const token = await this.tokenService.verifyToken(userToken)
+    return { token }
+  }
+
+  @Post('update')
+  @UseGuards(AuthGuard)
+  async updateToken(@Body('token') updateTokenDto: UpdateTokenDto ): Promise<TokenResponseInterface> {
+    const token = await this.tokenService.updateToken(updateTokenDto)
     return { token }
   }
 }
