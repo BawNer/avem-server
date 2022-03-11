@@ -12,7 +12,7 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [TypeOrmModule.forRoot(ormconfig), RoleModule, GroupModule, UserModule, TokenModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

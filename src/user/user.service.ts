@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindRelationsNotFoundError, Repository } from "typeorm";
 import { UserResponseInterface } from "./types/userResponse.interface";
@@ -8,12 +8,15 @@ import { compare } from 'bcrypt'
 import { JWT_SECRET } from "@app/config";
 import { CreateUserDto } from "./dto/createUsers.dto";
 import { LoginUserDto } from "./dto/loginUser.dto";
+import { TokenService } from "@app/token/token.service";
 
 @Injectable()
 export class UserService {
   constructor (
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => TokenService))
+    private readonly tokenService: TokenService
   ) {}
 
   async findById(id: number): Promise<UserEntity> {
@@ -36,7 +39,10 @@ export class UserService {
     const newUser = new UserEntity()
     Object.assign(newUser, createUsersDto)
     newUser.refreshToken = this.generateJwt(newUser)
-    return await this.userRepository.save(newUser)
+    const user = await this.userRepository.save(newUser)
+    const token = await this.tokenService.createToken(user)
+    user.token = token
+    return user
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
@@ -51,7 +57,9 @@ export class UserService {
     if (!isPasswordCorrect) { throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY) }
 
     delete user.password
-
+    delete user.token.id
+    delete user.token.userId
+    
     return user
   }
 
@@ -65,12 +73,12 @@ export class UserService {
     }, JWT_SECRET)
   }
 
-  buildUserResponse(user: UserEntity): UserResponseInterface {
-    return {
-      user: {
-        ...user,
-        token: this.generateJwt(user)
-      }
-    }
-  }
+  // buildUserResponse(user: UserEntity): UserResponseInterface {
+  //   return {
+  //     user: {
+  //       ...user,
+  //       token: this.generateJwt(user)
+  //     }
+  //   }
+  // }
 }

@@ -1,5 +1,5 @@
-import { TokenEntity } from "../token.entity";
+import { TokenResponseType } from "./tokeResponse.type";
 
 export interface TokenResponseInterface {
-  token: TokenEntity
+  token: TokenResponseType
 }

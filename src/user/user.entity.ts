@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash } from 'bcrypt'
 import { GroupEntity } from "@app/group/group.entity";
 import { RoleEntity } from "@app/role/role.entity";
@@ -60,5 +60,6 @@ export class UserEntity {
   role: RoleEntity
 
   @OneToOne(() => TokenEntity, token => token.userId, {eager: true})
+  @JoinColumn({name: 'id'})
   token: TokenEntity
 }
