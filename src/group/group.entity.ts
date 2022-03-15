@@ -9,4 +9,6 @@ export class GroupEntity {
   @Column()
   name: string
 
+  @OneToMany(() => UserEntity, user => user.group)
+  users: UserEntity[]
 }

@@ -6,13 +6,12 @@ export class TokenEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ unique: true })
-  userId: number
-
   @Column()
   token: string
 
   @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   createdAt: string
 
+  @OneToOne(() => UserEntity, user => user.accessToken)
+  user: UserEntity
 }

@@ -17,8 +17,8 @@ export class TokenService {
     private readonly userService: UserService
   ) {}
 
-  async findToken(userId: number): Promise<TokenEntity> {
-    const token = await this.tokenRepository.findOne({ userId })
+  async findToken(tokenId: number): Promise<TokenEntity> {
+    const token = await this.tokenRepository.findOne({ id: tokenId })
 
     if (!token) { throw new HttpException('Token not found', HttpStatus.NOT_FOUND) }
 
@@ -26,7 +26,8 @@ export class TokenService {
   }
 
   async createToken(user: UserEntity): Promise<TokenEntity> {
-    const userToken = await this.tokenRepository.findOne({userId: user.id})
+
+    const userToken = await this.tokenRepository.findOne({id: user.id})
 
     if (userToken) { throw new HttpException(`Token are exist`, HttpStatus.FORBIDDEN) }
 
@@ -34,12 +35,13 @@ export class TokenService {
       uid: user.id,
       login: user.login,
       username: user.username,
-      role: user?.role,
+      role: user?.roles,
       lastSignIn: user.lastSignIn
     }, JWT_SECRET)
+
     const newToken = new TokenEntity()
 
-    Object.assign(newToken, {userId: user.id, token})
+    Object.assign(newToken, {token})
 
     return await this.tokenRepository.save(newToken)
   }
@@ -77,11 +79,11 @@ export class TokenService {
       uid: user.id,
       login: user.login,
       username: user.username,
-      role: user?.role,
+      role: user?.roles,
       lastSignIn: user.lastSignIn
     }, JWT_SECRET)
 
-    Object.assign(token, newToken)
+    Object.assign(token, {token: newToken})
 
     return await this.tokenRepository.save(token)
   }

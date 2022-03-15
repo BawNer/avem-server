@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash } from 'bcrypt'
 import { GroupEntity } from "@app/group/group.entity";
 import { RoleEntity } from "@app/role/role.entity";
@@ -8,12 +8,6 @@ import { TokenEntity } from "@app/token/token.entity";
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number
-
-  @Column({ default: null })
-  roleId: number
-
-  @Column({ default: null })
-  groupId: number
 
   @Column()
   username: string
@@ -53,4 +47,14 @@ export class UserEntity {
   @Column({default: false})
   isPhoneActive: boolean
 
+  @OneToOne(() => TokenEntity, token => token.user, {eager: true})
+  @JoinColumn()
+  accessToken: TokenEntity
+
+  @ManyToMany(() => RoleEntity, role => role.users, {eager: true})
+  @JoinTable()
+  roles: RoleEntity[]
+
+  @ManyToOne(() => GroupEntity, group => group.users, {eager: true})
+  group: GroupEntity
 }

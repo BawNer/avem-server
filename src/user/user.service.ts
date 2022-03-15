@@ -41,8 +41,8 @@ export class UserService {
     newUser.refreshToken = this.generateJwt(newUser)
     const user = await this.userRepository.save(newUser)
     const token = await this.tokenService.createToken(user)
-    user.token = token
-    return user
+    user.accessToken = token
+    return await this.userRepository.save(user)
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
@@ -66,7 +66,7 @@ export class UserService {
       id: user.id,
       login: user.login,
       username: user.username,
-      role: user?.role,
+      role: user?.roles,
       lastSignIn: user.lastSignIn
     }, JWT_SECRET)
   }
