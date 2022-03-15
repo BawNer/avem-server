@@ -6,7 +6,7 @@ export class TokenEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ unique: true })
   userId: number
 
   @Column()

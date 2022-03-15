@@ -53,13 +53,4 @@ export class UserEntity {
   @Column({default: false})
   isPhoneActive: boolean
 
-  @ManyToOne(() => GroupEntity, group => group.id, {eager: true})
-  group: GroupEntity
-
-  @ManyToOne(() => RoleEntity, role => role.id, {eager: true})
-  role: RoleEntity
-
-  @OneToOne(() => TokenEntity, token => token.userId, {eager: true})
-  @JoinColumn({name: 'id'})
-  token: TokenEntity
 }

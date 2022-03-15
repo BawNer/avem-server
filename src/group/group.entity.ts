@@ -9,6 +9,4 @@ export class GroupEntity {
   @Column()
   name: string
 
-  @OneToMany(() => UserEntity, user => user.groupId)
-  user: UserEntity
 }

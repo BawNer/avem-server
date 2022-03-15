@@ -11,7 +11,4 @@ export class RoleEntity{
 
   @Column('simple-array')
   access: string
-
-  @OneToMany(() => UserEntity, user => user.roleId)
-  user: UserEntity
 }

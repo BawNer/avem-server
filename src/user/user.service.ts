@@ -57,8 +57,6 @@ export class UserService {
     if (!isPasswordCorrect) { throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY) }
 
     delete user.password
-    delete user.token.id
-    delete user.token.userId
     
     return user
   }
