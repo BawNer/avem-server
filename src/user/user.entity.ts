@@ -1,8 +1,9 @@
-import { BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash } from 'bcrypt'
 import { GroupEntity } from "@app/group/group.entity";
 import { RoleEntity } from "@app/role/role.entity";
 import { TokenEntity } from "@app/token/token.entity";
+import { NewsEntity } from "@app/news/news.entity";
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -57,4 +58,7 @@ export class UserEntity {
 
   @ManyToOne(() => GroupEntity, group => group.users, {eager: true})
   group: GroupEntity
+
+  @OneToMany(() => NewsEntity, news => news.author)
+  news: NewsEntity[]
 }

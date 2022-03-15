@@ -11,7 +11,7 @@ import { AuthMiddleware } from './user/middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormconfig), RoleModule, GroupModule, UserModule, TokenModule, NewsModule],
+  imports: [TypeOrmModule.forRoot(ormconfig), RoleModule, GroupModule, NewsModule, UserModule, TokenModule],
   controllers: [AppController],
   providers: [AppService]
 })
