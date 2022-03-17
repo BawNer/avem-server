@@ -18,7 +18,7 @@ export class NewsEntity {
   @Column()
   content: string
 
-  @Column({type: 'simple-array' ,default: null})
+  @Column({type: 'simple-array', default: null})
   photos: string
 
   @Column({default: null})

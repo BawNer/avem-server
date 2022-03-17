@@ -1,5 +1,8 @@
+import { User } from "@app/user/decorators/user.decorator";
 import { AuthGuard } from "@app/user/guards/auth.guard";
-import { Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { UserEntity } from "@app/user/user.entity";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { CreateNewsDto } from "./dto/createNews.dto";
 import { NewsService } from "./news.service";
 import { NewsResponseInterface } from "./types/newsResponse.interface";
 
@@ -15,7 +18,9 @@ export class NewsController {
     return this.newsService.buildResponse(news)
   }
 
-  // @Post()
-  // @UseGuards(AuthGuard)
-  // async createNews()
+  @Post()
+  @UseGuards(AuthGuard)
+  async createNews(@User() user: UserEntity, @Body('news') createNewsDto: CreateNewsDto): Promise<NewsResponseInterface> {
+    return this.newsService.buildResponse(await this.newsService.createNews(user, createNewsDto))
+  }
 }
