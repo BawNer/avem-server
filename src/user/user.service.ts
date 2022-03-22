@@ -47,7 +47,7 @@ export class UserService {
 
   async loginUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const user = await this.userRepository.findOne({login: loginUserDto.login}, { 
-      select: ['id', 'username', 'bio', 'photo', 'phone', 'email', 'login', 'password', 'refreshToken', 'isEmailActive', 'isPhoneActive']
+      select: ['id', 'username', 'bio', 'photo', 'phone', 'email', 'login', 'password', 'refreshToken', 'isEmailActive', 'isPhoneActive'], relations: ['accessToken', 'roles', 'group']
     })
 
     if (!user) { throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY) }
