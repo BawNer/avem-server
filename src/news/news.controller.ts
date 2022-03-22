@@ -1,9 +1,10 @@
 import { User } from "@app/user/decorators/user.decorator";
 import { AuthGuard } from "@app/user/guards/auth.guard";
 import { UserEntity } from "@app/user/user.entity";
-import { Body, Controller, Get, Post, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
+import { DeleteResult } from "typeorm";
 import { CreateNewsDto } from "./dto/createNews.dto";
 import { NewsEntity } from "./news.entity";
 import { NewsService } from "./news.service";
@@ -23,6 +24,8 @@ export class NewsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
+  @UsePipes(new ValidationPipe())
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -38,13 +41,18 @@ export class NewsController {
       }
     )
   )
-  async tester(
+  async createNews(
     @UploadedFiles() files: { photo: Express.Multer.File[], preview: Express.Multer.File },
     @Body() createNewsDto: CreateNewsDto,
     @User() user: UserEntity
   ) {
     const news = await this.newsService.createNews(files, createNewsDto, user)
-
     return { news }
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  async deleteNews(@Param('id') id: number): Promise<DeleteResult> {
+    return await this.newsService.deleteNews(id)
   }
 }

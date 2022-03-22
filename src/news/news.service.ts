@@ -1,13 +1,14 @@
 import { UserEntity } from "@app/user/user.entity";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository } from "typeorm";
 import { CreateNewsDto } from "./dto/createNews.dto";
 import { NewsEntity } from "./news.entity";
 import { NewsResponseInterface } from "./types/newsResponse.interface";
 import slugify from "slugify";
 import { convertingFormatFile, convertingFormatFiles } from "./utils/fileUpload.utils";
-import { AuthorType } from "./types/author.type";
+import * as fs from 'fs'
+import * as path from 'path'
 
 
 
@@ -59,6 +60,25 @@ export class NewsService {
     }
 
     return await this.newsRepository.save(news)
+  }
+
+  async deleteNews(id: number): Promise<DeleteResult> {
+    const news = await this.newsRepository.findOne(id)
+    if (!news) {
+      throw new HttpException('Bad credintails', HttpStatus.FORBIDDEN)
+    }
+
+    if (Array.isArray(news.photos)) {
+      news.photos.forEach(photo => {
+        fs.unlinkSync(path.join(__dirname, `../../uploads/news/${photo.filename}`))
+      })
+    }
+
+    if (news.preview) {
+      fs.unlinkSync(path.join(__dirname, `../../uploads/news/${news.preview.filename}`))
+    }
+
+    return await this.newsRepository.delete(id)
   }
 
   buildResponse(news: NewsEntity[]): NewsResponseInterface {

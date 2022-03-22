@@ -19,7 +19,7 @@ export class NewsEntity {
   content: string
 
   @Column({type: 'simple-json', default: null})
-  photos: object[]
+  photos: { filename: string, path: string }[]
 
   @Column({type: 'simple-json', default: null})
   preview: { filename: string, path: string }
