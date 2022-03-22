@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator"
+import { IsEmail, IsNotEmpty } from "class-validator"
 import { Timestamp } from "typeorm"
 
 export class CreateUserDto {
@@ -17,6 +17,7 @@ export class CreateUserDto {
   readonly phone: string
 
   @IsNotEmpty()
+  @IsEmail()
   readonly email: string
 
   @IsNotEmpty()
