@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,7 +12,14 @@ import { AuthMiddleware } from './user/middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormconfig), RoleModule, GroupModule, NewsModule, UserModule, TokenModule],
+  imports: [
+    TypeOrmModule.forRoot(ormconfig), 
+    RoleModule, 
+    GroupModule, 
+    NewsModule,
+    UserModule, 
+    TokenModule
+  ],
   controllers: [AppController],
   providers: [AppService]
 })
