@@ -1,5 +1,6 @@
 import { NewsEntity } from "../news.entity";
 
 export interface NewsResponseInterface {
-  news: NewsEntity | NewsEntity[]
+  news:  NewsEntity[],
+  newsCount: number
 }
