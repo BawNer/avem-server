@@ -1,5 +1,5 @@
 import { AuthGuard } from "@app/user/guards/auth.guard";
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { DeleteResult } from "typeorm";
 import { CreateRoleDto } from "./dto/createRole.dto";
 import { RoleService } from "./role.service";
@@ -19,6 +19,7 @@ export class RoleController {
 
   @Post('role')
   @UseGuards(AuthGuard)
+  @UsePipes(new ValidationPipe())
   async createRole(@Body('role') createRoleDto: CreateRoleDto): Promise<RolesResponseInterface> {
     const role = await this.roleServivce.createRole(createRoleDto)
     return { roles: role }
@@ -26,6 +27,7 @@ export class RoleController {
 
   @Put('role/:id')
   @UseGuards(AuthGuard)
+  @UsePipes(new ValidationPipe())
   async updateRole(@Param('id') roleId: number, @Body('role') createRoleDto: CreateRoleDto): Promise<RolesResponseInterface> {
     const role = await this.roleServivce.updateRole(roleId, createRoleDto)
     return { roles: role }
