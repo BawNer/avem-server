@@ -48,15 +48,15 @@ export class UserEntity {
   @Column({default: false})
   isPhoneActive: boolean
 
-  @OneToOne(() => TokenEntity, token => token.user, {eager: true})
+  @OneToOne(() => TokenEntity, token => token.user)
   @JoinColumn()
   accessToken: TokenEntity
 
-  @ManyToMany(() => RoleEntity, role => role.users, {eager: true})
+  @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable()
   roles: RoleEntity[]
 
-  @ManyToOne(() => GroupEntity, group => group.users, {eager: true})
+  @ManyToOne(() => GroupEntity, group => group.users)
   group: GroupEntity
 
   @OneToMany(() => NewsEntity, news => news.author)
