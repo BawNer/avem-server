@@ -1,12 +1,11 @@
 import { User } from "@app/user/decorators/user.decorator";
 import { AuthGuard } from "@app/user/guards/auth.guard";
 import { UserEntity } from "@app/user/user.entity";
-import { Body, Controller, Delete, Get, Param, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { DeleteResult } from "typeorm";
 import { CreateNewsDto } from "./dto/createNews.dto";
-import { NewsEntity } from "./news.entity";
 import { NewsService } from "./news.service";
 import { NewsResponseInterface } from "./types/newsResponse.interface";
 import { editFileName, imageFileFilter } from "./utils/fileUpload.utils";
@@ -18,8 +17,8 @@ export class NewsController {
   ) {}
 
   @Get()
-  async findAll(): Promise<NewsResponseInterface> {
-    const news = await this.newsService.findAll()
+  async findAll(@Query() query: any): Promise<NewsResponseInterface> {
+    const news = await this.newsService.findAll(query)
     return this.newsService.buildResponse(news)
   }
 

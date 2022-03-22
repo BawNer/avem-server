@@ -1,7 +1,7 @@
 import { UserEntity } from "@app/user/user.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, getRepository, Repository } from "typeorm";
 import { CreateNewsDto } from "./dto/createNews.dto";
 import { NewsEntity } from "./news.entity";
 import { NewsResponseInterface } from "./types/newsResponse.interface";
@@ -20,8 +20,29 @@ export class NewsService {
     private readonly newsRepository: Repository<NewsEntity>
   ) {}
 
-  async findAll(): Promise<NewsEntity[]> {
-    return await this.newsRepository.find()
+  async findAll(query: any): Promise<NewsEntity[]> {
+    const queryBuilder = getRepository(NewsEntity).createQueryBuilder('news').leftJoinAndSelect('news.author', 'author')
+    queryBuilder.orderBy('news.createdAt' ,'DESC')
+    
+    if (query.offset) {
+      queryBuilder.offset(query.offset)
+    }
+
+    if (query.limit) {
+      queryBuilder.limit(query.limit)
+    }
+
+    const news = await queryBuilder.getMany()
+
+    news.forEach(el => {
+      delete el.author.accessToken
+      delete el.author.refreshToken
+      delete el.author.phone
+      delete el.author.isPhoneActive
+      delete el.author.isEmailActive
+    })
+
+    return news
   }
 
   async createNews(
