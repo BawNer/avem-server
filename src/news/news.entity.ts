@@ -18,20 +18,20 @@ export class NewsEntity {
   @Column()
   content: string
 
-  @Column({type: 'simple-array', default: null})
-  photos: string
-
-  @Column({default: null})
-  preview: string
-
-  @Column({type: 'simple-array', default: 'all'})
-  visible: string
+  @Column({type: 'simple-json', default: null})
+  photos: object[]
 
   @Column({type: 'simple-json', default: null})
-  tags: {}
+  preview: { filename: string, path: string }
+
+  @Column({type: 'simple-array', default: 'all'})
+  visible: string[]
+
+  @Column({type: 'simple-array', default: null})
+  tags: string[]
 
   @Column({type: 'simple-array'})
-  meta: string
+  meta: string[]
 
   @CreateDateColumn()
   createdAt: string
@@ -39,6 +39,6 @@ export class NewsEntity {
   @UpdateDateColumn()
   updatedAt: string
 
-  @ManyToOne(() => UserEntity, user => user.news)
+  @ManyToOne(() => UserEntity, user => user.news, {eager: true})
   author: UserEntity
 }
