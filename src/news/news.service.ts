@@ -46,7 +46,7 @@ export class NewsService {
   }
 
   async createNews(
-    files: { photo: Express.Multer.File[], preview: Express.Multer.File }, 
+    files: { photo?: Express.Multer.File[], preview?: Express.Multer.File }, 
     createNewsDto: CreateNewsDto, 
     user: UserEntity
   ): Promise<NewsEntity> {
@@ -64,21 +64,26 @@ export class NewsService {
 
     news.author = user
 
-    const photos = await convertingFormatFiles(files.photo)
-    const preview = await convertingFormatFile(files.preview[0])
-
-    news.photos = []
-    photos.forEach(photo => {
-      news.photos.push({
-        filename: photo.filename,
-        path: `${process.env.SERVER_PROTOCOL}://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/${photo.path}`
+    if (files.photo) {
+      const photos = await convertingFormatFiles(files.photo)
+      news.photos = []
+      photos.forEach(photo => {
+        news.photos.push({
+          filename: photo.filename,
+          path: `${process.env.SERVER_PROTOCOL}://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/${photo.path}`
+        })
       })
-    })
-
-    news.preview = {
-      filename: preview.filename,
-      path: `${process.env.SERVER_PROTOCOL}://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/${preview.path}`
     }
+
+    if (files.preview) {
+      const preview = await convertingFormatFile(files.preview[0])
+
+      news.preview = {
+        filename: preview.filename,
+        path: `${process.env.SERVER_PROTOCOL}://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/${preview.path}`
+      }
+    }
+
 
     return await this.newsRepository.save(news)
   }

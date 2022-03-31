@@ -28,7 +28,7 @@ export class NewsController {
   @UseInterceptors(
     FileFieldsInterceptor(
       [
-        { name: 'photo', maxCount: 5 },
+        { name: 'photo', maxCount: 20 },
         { name: 'preview', maxCount: 1 }
       ],
       {
@@ -41,7 +41,7 @@ export class NewsController {
     )
   )
   async createNews(
-    @UploadedFiles() files: { photo: Express.Multer.File[], preview: Express.Multer.File },
+    @UploadedFiles() files: { photo?: Express.Multer.File[], preview?: Express.Multer.File },
     @Body() createNewsDto: CreateNewsDto,
     @User() user: UserEntity
   ) {

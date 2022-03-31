@@ -18,21 +18,26 @@ export const editFileName = (req, file, callback) => {
 }
 
 export const convertingFormatFiles = async (photos : Express.Multer.File[]): Promise<Express.Multer.File[]> => {
-  for (const photo of photos) {
+  if (photos && photos.length) {
+    for (const photo of photos) {
+      await webp.cwebp(photo.path, `${photo.path.split('.')[0]}.webp`, '-q 80')
+      fs.unlinkSync(photo.path)
+      photo.path = (`${photo.path.split('.')[0]}.webp`).replace(/\\/g, '/')
+      photo.filename = photo.filename.split('.')[0]+'.webp'
+      
+    }
+  }
+  
+  return photos
+}
+
+export const convertingFormatFile = async (photo: Express.Multer.File): Promise<Express.Multer.File> => {
+  if (photo) {
     await webp.cwebp(photo.path, `${photo.path.split('.')[0]}.webp`, '-q 80')
     fs.unlinkSync(photo.path)
     photo.path = (`${photo.path.split('.')[0]}.webp`).replace(/\\/g, '/')
     photo.filename = photo.filename.split('.')[0]+'.webp'
   }
-
-  return photos
-}
-
-export const convertingFormatFile = async (photo: Express.Multer.File): Promise<Express.Multer.File> => {
-  await webp.cwebp(photo.path, `${photo.path.split('.')[0]}.webp`, '-q 80')
-  fs.unlinkSync(photo.path)
-  photo.path = (`${photo.path.split('.')[0]}.webp`).replace(/\\/g, '/')
-  photo.filename = photo.filename.split('.')[0]+'.webp'
 
   return photo
 }
