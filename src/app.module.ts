@@ -13,7 +13,7 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(ormconfig), 
+    TypeOrmModule.forRoot(ormconfig),
     RoleModule, 
     GroupModule, 
     NewsModule,
