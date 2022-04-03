@@ -63,10 +63,10 @@ export class UserService {
   }
 
   async updateUser(updateUserDto: UpdateUserDto, user: UserEntity): Promise<UserEntity> {
-    console.log(user)
+    const currentUser = await this.userRepository.findOne({id: user.id}, {relations: ['accessToken']})
     Object.assign(user, updateUserDto)
     const newToken = await this.tokenService.updateToken({
-      userToken: user.accessToken.token,
+      userToken: currentUser.accessToken.token,
       userRefreshUserToken: user.refreshToken
     })
     user.accessToken = newToken
