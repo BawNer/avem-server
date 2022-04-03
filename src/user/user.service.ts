@@ -63,6 +63,7 @@ export class UserService {
   }
 
   async updateUser(updateUserDto: UpdateUserDto, user: UserEntity): Promise<UserEntity> {
+    console.log(user)
     Object.assign(user, updateUserDto)
     const newToken = await this.tokenService.updateToken({
       userToken: user.accessToken.token,
