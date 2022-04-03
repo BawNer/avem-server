@@ -96,12 +96,12 @@ export class NewsService {
 
     if (Array.isArray(news.photos)) {
       news.photos.forEach(photo => {
-        fs.unlinkSync(path.join(__dirname, `../../uploads/news/${photo.filename}`))
+        fs.unlinkSync(path.join(__dirname, '..', '..', `/uploads/news/${photo.filename}`))
       })
     }
 
     if (news.preview) {
-      fs.unlinkSync(path.join(__dirname, `../../uploads/news/${news.preview.filename}`))
+      fs.unlinkSync(path.join(__dirname, '..', '..', `/uploads/news/${news.preview.filename}`))
     }
 
     return await this.newsRepository.delete(id)
