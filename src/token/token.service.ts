@@ -67,7 +67,7 @@ export class TokenService {
 
     if (!token) { throw new HttpException('Token not found', HttpStatus.CONFLICT) }
 
-    const decodeUserToken = verify(token, JWT_SECRET)
+    const decodeUserToken = verify(token.token, JWT_SECRET)
 
     const user = await this.userService.findById(decodeUserToken.id)
 
