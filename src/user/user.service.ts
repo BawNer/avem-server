@@ -9,6 +9,7 @@ import { JWT_SECRET } from "@app/config";
 import { CreateUserDto } from "./dto/createUsers.dto";
 import { LoginUserDto } from "./dto/loginUser.dto";
 import { TokenService } from "@app/token/token.service";
+import { UpdateUserDto } from "./dto/updateUser.dto";
 
 @Injectable()
 export class UserService {
@@ -59,6 +60,17 @@ export class UserService {
     delete user.password
     
     return user
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto, user: UserEntity): Promise<UserEntity> {
+    Object.assign(user, updateUserDto)
+    const newToken = await this.tokenService.updateToken({
+      userToken: user.accessToken.token,
+      userRefreshUserToken: user.refreshToken
+    })
+    user.accessToken = newToken
+
+    return await this.userRepository.save(user)
   }
 
   generateJwt(user: UserEntity): string {
