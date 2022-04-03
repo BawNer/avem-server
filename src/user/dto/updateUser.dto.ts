@@ -1,4 +1,7 @@
 export class UpdateUserDto {
   readonly username?: string
-  readonly roles?: string[]
+  readonly roles?: {
+    name: string,
+    access: string[]
+  }
 }

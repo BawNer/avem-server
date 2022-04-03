@@ -5,5 +5,5 @@ export class CreateRoleDto {
   readonly name: string
 
   @IsNotEmpty()
-  readonly access: string
+  readonly access: string[]
 }

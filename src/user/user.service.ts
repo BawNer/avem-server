@@ -10,6 +10,7 @@ import { CreateUserDto } from "./dto/createUsers.dto";
 import { LoginUserDto } from "./dto/loginUser.dto";
 import { TokenService } from "@app/token/token.service";
 import { UpdateUserDto } from "./dto/updateUser.dto";
+import { RoleService } from "@app/role/role.service";
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,8 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @Inject(forwardRef(() => TokenService))
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly roleService: RoleService
   ) {}
 
   async findById(id: number): Promise<UserEntity> {
@@ -70,6 +72,14 @@ export class UserService {
       userRefreshUserToken: user.refreshToken
     })
     user.accessToken = newToken
+
+    if (updateUserDto.roles) {
+      const roles = await this.roleService.createRole({
+        name: updateUserDto.roles.name,
+        access: updateUserDto.roles.access
+      })
+      user.roles = [roles]
+    }
 
     return await this.userRepository.save(user)
   }
