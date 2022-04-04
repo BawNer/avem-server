@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -7,6 +6,7 @@ import { GroupModule } from './group/group.module';
 import { NewsModule } from './news/news.module';
 import ormconfig from './ormconfig'
 import { RoleModule } from './role/role.module';
+import { ScheduleModule } from './schedule/schedule.module';
 import { TokenModule } from './token/token.module';
 import { AuthMiddleware } from './user/middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
@@ -18,7 +18,8 @@ import { UserModule } from './user/user.module';
     GroupModule, 
     NewsModule,
     UserModule, 
-    TokenModule
+    TokenModule,
+    ScheduleModule
   ],
   controllers: [AppController],
   providers: [AppService]
