@@ -4,6 +4,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { ScheduleService } from "./schedule.service";
 import { extname } from "path";
+import { Throttle } from "@nestjs/throttler";
 
 @Controller('schedule')
 export class ScheduleController {
@@ -11,6 +12,7 @@ export class ScheduleController {
     private readonly scheduleService: ScheduleService
   ) {}
 
+  @Throttle(3, 60)
   @Get()
   async getSchedule(@Query() query: any): Promise<any> {
     const schedule = await this.scheduleService.getSchedule(query)
