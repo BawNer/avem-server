@@ -1,5 +1,12 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from '@app/user/user.entity';
+import { AudienceEntity } from '@app/audience/audience.entity';
 
 @Entity('events')
 export class EventsEntity {
@@ -20,4 +27,9 @@ export class EventsEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.events, { eager: true })
   author: UserEntity;
+
+  @ManyToOne(() => AudienceEntity, (audience) => audience.events, {
+    eager: true,
+  })
+  audience: AudienceEntity;
 }
