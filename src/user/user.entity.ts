@@ -48,7 +48,7 @@ export class UserEntity {
     this.password = await hash(this.password, 10);
   }
 
-  @Column()
+  @Column({ select: false })
   refreshToken: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
