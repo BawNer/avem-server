@@ -12,6 +12,8 @@ export class AudienceEntity {
   @Column()
   audience: string;
 
-  @OneToMany(() => EventsEntity, (events) => events.audience)
+  @OneToMany(() => EventsEntity, (events) => events.audience, {
+    onDelete: 'CASCADE',
+  })
   events: EventsEntity[];
 }
