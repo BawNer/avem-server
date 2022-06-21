@@ -5,7 +5,7 @@ export class AudienceWithEvents1655816271553 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "events" ADD "audienceId" integer`);
-        await queryRunner.query(`ALTER TABLE "events" ADD CONSTRAINT "FK_009f2e21f29b4d58d56b2381ae5" FOREIGN KEY ("audienceId") REFERENCES "audience"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "events" ADD CONSTRAINT "FK_009f2e21f29b4d58d56b2381ae5" FOREIGN KEY ("audienceId") REFERENCES "audience"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
