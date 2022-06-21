@@ -1,64 +1,79 @@
-import { BeforeInsert, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { hash } from 'bcrypt'
-import { GroupEntity } from "@app/group/group.entity";
-import { RoleEntity } from "@app/role/role.entity";
-import { TokenEntity } from "@app/token/token.entity";
-import { NewsEntity } from "@app/news/news.entity";
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { hash } from 'bcrypt';
+import { GroupEntity } from '@app/group/group.entity';
+import { RoleEntity } from '@app/role/role.entity';
+import { TokenEntity } from '@app/token/token.entity';
+import { NewsEntity } from '@app/news/news.entity';
+import { EventsEntity } from '@app/events/events.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  username: string
+  username: string;
 
   @Column()
-  bio: string
+  bio: string;
 
   @Column({ default: null })
-  photo: string
+  photo: string;
 
   @Column({ default: null })
-  phone: string
+  phone: string;
 
   @Column()
-  email: string
+  email: string;
 
   @Column()
-  login: string
+  login: string;
 
   @Column({ select: false })
-  password: string
+  password: string;
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await hash(this.password, 10)
+    this.password = await hash(this.password, 10);
   }
 
   @Column()
-  refreshToken: string
+  refreshToken: string;
 
-  @Column({ type: "timestamp", default: () => 'CURRENT_TIMESTAMP' })
-  lastSignIn: string
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  lastSignIn: string;
 
-  @Column({default: false})
-  isEmailActive: boolean
+  @Column({ default: false })
+  isEmailActive: boolean;
 
-  @Column({default: false})
-  isPhoneActive: boolean
+  @Column({ default: false })
+  isPhoneActive: boolean;
 
-  @OneToOne(() => TokenEntity, token => token.user)
+  @OneToOne(() => TokenEntity, (token) => token.user)
   @JoinColumn()
-  accessToken: TokenEntity
+  accessToken: TokenEntity;
 
-  @ManyToMany(() => RoleEntity, role => role.users)
+  @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable()
-  roles: RoleEntity[]
+  roles: RoleEntity[];
 
-  @ManyToOne(() => GroupEntity, group => group.users)
-  group: GroupEntity
+  @ManyToOne(() => GroupEntity, (group) => group.users)
+  group: GroupEntity;
 
-  @OneToMany(() => NewsEntity, news => news.author)
-  news: NewsEntity[]
+  @OneToMany(() => NewsEntity, (news) => news.author)
+  news: NewsEntity[];
+
+  @OneToMany(() => EventsEntity, (events) => events.author)
+  events: EventsEntity[];
 }

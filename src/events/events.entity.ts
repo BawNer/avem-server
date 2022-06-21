@@ -1,0 +1,23 @@
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from '@app/user/user.entity';
+
+@Entity('events')
+export class EventsEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  title: string;
+
+  @Column()
+  content: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  date: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.events, { eager: true })
+  author: UserEntity;
+}
